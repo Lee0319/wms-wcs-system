@@ -1,158 +1,231 @@
 import { useEffect, useState } from 'react'
 import {
-  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart,
-  ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Bar, BarChart, CartesianGrid, LabelList, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts'
-import {
-  Package, ArrowDownToLine, ArrowUpFromLine, Truck, AlertTriangle,
-  Activity, Clock, CheckCircle2,
-} from '@/lib/icons'
+import { Grid3X3, Boxes, Activity, Truck, ArrowRight } from '@/lib/icons'
+import { ChartTooltip } from '@/components/shared/ChartTooltip'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { StatCard } from '@/components/shared/StatCard'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { allTable } from '@/api/adapter'
-import { dailyStats, abcDistribution, zoneUsage, type Inventory, type WcsTask, type Call, type Device } from '@/mock/data'
+import {
+  dailyStats, aisleUsage, zones, aisles,
+  type Inventory, type WcsTask, type Call, type Bin, type InboundOrder,
+} from '@/mock/data'
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+function formatStamp(date: Date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+}
+
+const taskTypeVariant = (type: string) => {
+  if (type === '下架') return 'warning' as const
+  if (type === '移库' || type === '倒库') return 'secondary' as const
+  return 'info' as const
+}
 
 export function Dashboard() {
   const [inv, setInv] = useState<Inventory[]>([])
   const [tasks, setTasks] = useState<WcsTask[]>([])
   const [calls, setCalls] = useState<Call[]>([])
-  const [devices, setDevices] = useState<Device[]>([])
+  const [bins, setBins] = useState<Bin[]>([])
+  const [inOrders, setInOrders] = useState<InboundOrder[]>([])
+  const [now, setNow] = useState(() => new Date())
 
   useEffect(() => {
     allTable<Inventory>('inventory').then(setInv)
     allTable<WcsTask>('wcsTasks').then(setTasks)
     allTable<Call>('calls').then(setCalls)
-    allTable<Device>('devices').then(setDevices)
+    allTable<Bin>('bins').then(setBins)
+    allTable<InboundOrder>('inboundOrders').then(setInOrders)
+    const timer = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(timer)
   }, [])
 
+  const isMock = import.meta.env.VITE_USE_MOCK !== 'false'
+
   const totalQty = inv.reduce((s, i) => s + i.qty, 0)
-  const reservedQty = inv.reduce((s, i) => s + i.reserved, 0)
+  const batchCount = new Set(inv.map((i) => i.batch)).size
   const nearExpiry = inv.filter((i) => i.expiry && new Date(i.expiry).getTime() - Date.now() < 30 * 86400000).length
-  const runningDevices = devices.filter((d) => d.status === '运行').length
-  const activeTasks = tasks.filter((t) => t.status !== '已完成').length
-  const pendingCalls = calls.filter((c) => c.status !== '已完成' && c.status !== '已取消').length
+
+  const occupiedBins = bins.filter((b) => b.status !== '空货位' && b.status !== '停用').length
+  const occupancy = bins.length ? Math.round((occupiedBins / bins.length) * 100) : 0
+
+  const activeTasks = tasks.filter((t) => t.status !== '已完成')
+  const pendingTasks = activeTasks.length
+  const todayCalls = calls.length
+  const responded = calls.filter((c) => c.status !== '待响应' && c.status !== '已取消')
+  const avgResponse = responded.length
+    ? Math.round(responded.reduce((s, c) => s + c.responseSec, 0) / responded.length)
+    : 0
+
+  const pendingPutaway = inOrders.filter((o) => o.status === '待上架').length
+  const oneWayAisles = aisles.filter((a) => a.direction === '左进右出').length
+  const soloZoneEnabled = zones.some((z) => z.strategy === '单物料专巷')
+
+  const recent7 = dailyStats.slice(-7)
+  const taskRows = activeTasks.slice(0, 5)
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <PageHeader
         title="综合驾驶舱"
-        description="库存总量 / 库龄汇总 / 出入库趋势 / 设备状态"
+        description="库位占用 / 在库库存 / 作业任务 / 托盘呼叫"
         group="我的工作台"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="库存总量" value={totalQty.toLocaleString()} icon={Package} hint="件 · 全仓库存" tone="blue" trend={8.2} />
-        <StatCard title="已预占库存" value={reservedQty.toLocaleString()} icon={ArrowUpFromLine} hint="件 · 出库预留" tone="purple" />
-        <StatCard title="待处理 WCS 任务" value={activeTasks} icon={Activity} hint={`${runningDevices} 台设备运行中`} tone="amber" />
-        <StatCard title="临期批次预警" value={nearExpiry} icon={AlertTriangle} hint="30 天内到期" tone="red" />
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-success/30 bg-success/10 px-4 py-2.5 text-sm text-success">
+        <span className="flex items-center gap-2 font-medium">
+          <span className="h-2 w-2 rounded-full bg-success" />
+          {isMock ? 'Mock 数据源已连接' : '数据库已连接'}
+        </span>
+        <span className="font-mono text-xs text-muted-foreground">{formatStamp(now)}</span>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-base">出入库趋势</CardTitle>
-            <CardDescription>近 14 日每日入库 / 出库 / 托盘呼叫量</CardDescription>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          title="库位占用率"
+          value={`${occupancy}%`}
+          icon={Grid3X3}
+          tone="blue"
+          hint={`${aisleUsage.length} 条专巷 · ${occupiedBins}/${bins.length} 个货位`}
+        />
+        <StatCard
+          title="在库库存"
+          value={totalQty.toLocaleString()}
+          icon={Boxes}
+          tone="purple"
+          hint={`件 · 按批次分段管理 · ${batchCount} 个批次`}
+        />
+        <StatCard
+          title="待执行作业任务"
+          value={pendingTasks}
+          icon={Activity}
+          tone="amber"
+          hint="含出库 / 移库 / 上架"
+        />
+        <StatCard
+          title="今日托盘呼叫"
+          value={todayCalls}
+          icon={Truck}
+          tone="green"
+          hint={avgResponse ? `AGV 平均响应 ${avgResponse} 秒` : '暂无 AGV 响应记录'}
+        />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader className="flex flex-row items-start justify-between space-y-0">
+            <CardTitle className="text-base">近 7 日出库 / 入库量</CardTitle>
+            <span className="text-xs text-muted-foreground">单位：托盘</span>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
-              <AreaChart data={dailyStats} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="inGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="outGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={recent7} margin={{ top: 5, right: 8, left: -18, bottom: 0 }} barGap={4}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-border" />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
+                <Tooltip content={<ChartTooltip />} cursor={{ fill: 'hsl(var(--muted))', fillOpacity: 0.6 }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Area type="monotone" dataKey="inbound" name="入库托数" stroke="hsl(var(--chart-1))" style={{ stroke: 'hsl(var(--chart-1))' }} fill="url(#inGrad)" strokeWidth={2} isAnimationActive={false} />
-                <Area type="monotone" dataKey="outbound" name="出库托数" stroke="hsl(var(--chart-2))" style={{ stroke: 'hsl(var(--chart-2))' }} fill="url(#outGrad)" strokeWidth={2} isAnimationActive={false} />
-                <Area type="monotone" dataKey="calls" name="托盘呼叫" stroke="hsl(var(--chart-3))" style={{ stroke: 'hsl(var(--chart-3))' }} fill="transparent" strokeWidth={1.5} isAnimationActive={false} />
-              </AreaChart>
+                <Bar dataKey="inbound" name="入库" fill="hsl(var(--chart-1))" radius={[3, 3, 0, 0]} barSize={9} isAnimationActive={false} />
+                <Bar dataKey="outbound" name="出库" fill="hsl(var(--chart-2))" radius={[3, 3, 0, 0]} barSize={9} isAnimationActive={false} />
+              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">物料 ABC 分类</CardTitle>
-            <CardDescription>按周转价值分布</CardDescription>
+          <CardHeader className="flex flex-row items-start justify-between space-y-0">
+            <CardTitle className="text-base">各巷道库位利用率</CardTitle>
+            <span className="text-xs text-muted-foreground">单物料专巷</span>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie data={abcDistribution} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} isAnimationActive={false} label={({ name, value }) => `${name} ${value}%`}>
-                  {abcDistribution.map((_, i) => <Cell key={i} fill={['hsl(var(--chart-1))', 'hsl(var(--chart-3))', 'hsl(var(--muted-foreground))'][i]} />)}
-                </Pie>
-                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-              </PieChart>
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={aisleUsage} layout="vertical" margin={{ top: 8, right: 36, left: 4, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-border" />
+                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+                <YAxis type="category" dataKey="code" width={40} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <Tooltip content={<ChartTooltip valueSuffix="%" />} cursor={{ fill: 'hsl(var(--muted))', fillOpacity: 0.6 }} />
+                <Bar dataKey="usage" fill="hsl(var(--chart-1))" radius={[0, 3, 3, 0]} barSize={12} isAnimationActive={false}>
+                  <LabelList
+                    dataKey="usage"
+                    position="right"
+                    formatter={(value: number) => `${value}%`}
+                    fill="hsl(var(--muted-foreground))"
+                    fontSize={11}
+                  />
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
-            <div className="mt-2 space-y-1.5">
-              {abcDistribution.map((d, i) => (
-                <div key={d.name} className="flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full" style={{ background: ['hsl(var(--chart-1))', 'hsl(var(--chart-3))', 'hsl(var(--muted-foreground))'][i] }} />
-                    {d.name} 物料
-                  </span>
-                  <span className="text-muted-foreground">{d.count} 种</span>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-base">库区使用率</CardTitle>
-            <CardDescription>各库区当前容量水位</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">实时作业任务</CardTitle>
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              WMS 下发 <ArrowRight className="h-3 w-3" /> WCS 执行
+            </span>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {zoneUsage.map((z) => (
-              <div key={z.zone} className="space-y-1.5">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{z.zone}</span>
-                  <span className="text-muted-foreground text-xs">容量 {z.容量} · 使用率 {z.使用率}%</span>
-                </div>
-                <Progress value={z.使用率} className="h-2" />
-              </div>
-            ))}
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {['任务号', '类型', '巷道 / 货位', '执行设备', '进度', '状态'].map((h) => (
+                    <TableHead key={h}>{h}</TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {taskRows.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">暂无待执行任务</TableCell>
+                  </TableRow>
+                ) : taskRows.map((t) => (
+                  <TableRow key={t.id}>
+                    <TableCell className="font-mono">{t.no}</TableCell>
+                    <TableCell>
+                      <Badge variant={taskTypeVariant(t.type)} className="font-normal">{t.type}</Badge>
+                    </TableCell>
+                    <TableCell className="font-mono text-muted-foreground">{t.bin}</TableCell>
+                    <TableCell className="font-mono text-muted-foreground">{t.device}</TableCell>
+                    <TableCell><Progress value={100} className="h-1.5 w-24" /></TableCell>
+                    <TableCell>
+                      <Badge variant="success" className="font-normal">已完成</Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">实时动态</CardTitle>
-            <CardDescription>最近作业事件</CardDescription>
+            <CardTitle className="text-base">系统提示</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { icon: ArrowDownToLine, color: 'text-info', text: '收货单 RK20261118 已上架', time: '3 分钟前' },
-                { icon: Truck, color: 'text-warning', text: `托盘呼叫待处理 ${pendingCalls} 单`, time: '8 分钟前' },
-                { icon: CheckCircle2, color: 'text-success', text: '波次 WAVE-006 拣选完成', time: '15 分钟前' },
-                { icon: Clock, color: 'text-chart-4', text: '设备 STK-02 完成倒库任务', time: '22 分钟前' },
-                { icon: AlertTriangle, color: 'text-destructive', text: `临期批次 ${nearExpiry} 条需关注`, time: '刚刚' },
-              ].map((item, i) => (
-                <div key={i} className="flex gap-3">
-                  <div className={`mt-0.5 ${item.color}`}><item.icon className="h-4 w-4" /></div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs leading-relaxed">{item.text}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">{item.time}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <CardContent className="space-y-3">
+            {[
+              { label: '单物料专巷策略', value: <span className="text-sm font-medium">{soloZoneEnabled ? '已启用' : '未启用'}</span> },
+              { label: '先进先出（FIFO）', value: <span className="text-sm font-medium">出库默认规则</span> },
+              { label: '左进右出单向流', value: <Badge variant="secondary" className="font-normal">{oneWayAisles} 条巷道</Badge> },
+              { label: '临期批次', value: <Badge variant="destructive" className="font-normal">{nearExpiry} 个待处理</Badge> },
+              { label: '待上架收货单', value: <span className="text-sm font-medium">{pendingPutaway} 单</span> },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center justify-between gap-3 border-b border-dashed pb-3 last:border-0 last:pb-0">
+                <span className="text-sm text-muted-foreground">{item.label}</span>
+                {item.value}
+              </div>
+            ))}
+            <p className="rounded-lg bg-muted/60 p-3 text-sm leading-relaxed text-muted-foreground">
+              ZK03 成品区采用「一个物料一条专巷、左端入库 / 右端出库」的单向作业布局，出库分配按批次入库日期先进先出；数据来自{isMock ? '本地 Mock 数据源' : '后端数据服务'}。
+            </p>
           </CardContent>
         </Card>
       </div>

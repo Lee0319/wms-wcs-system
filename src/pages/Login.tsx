@@ -119,7 +119,7 @@ export function Login() {
                 </Button>
               </form>
 
-              <div className="mt-5 rounded-lg bg-muted/60 p-3 text-xs text-muted-foreground space-y-1.5">
+              <div className="mt-5 rounded-lg bg-muted/60 p-3 text-sm text-muted-foreground space-y-1.5">
                 <div className="flex items-center gap-1.5 font-medium text-foreground/80">
                   <ShieldCheck className="h-3.5 w-3.5" /> 演示账号提示
                 </div>

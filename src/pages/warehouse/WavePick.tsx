@@ -68,11 +68,11 @@ export function WavePick() {
                   <TableRow key={t.id}
                     className={`cursor-pointer ${selected?.id === t.id ? 'bg-primary/5' : ''}`}
                     onClick={() => { setSelected(t); setQty(t.qty); setBinCode(''); setBatchCode('') }}>
-                    <TableCell className="font-mono text-xs">{t.no}</TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{t.order}</TableCell>
-                    <TableCell className="font-mono text-xs">{t.bin}</TableCell>
-                    <TableCell className="text-xs">{t.material}</TableCell>
-                    <TableCell className="font-mono text-xs">{t.batch}</TableCell>
+                    <TableCell className="font-mono text-sm">{t.no}</TableCell>
+                    <TableCell className="font-mono text-sm text-muted-foreground">{t.order}</TableCell>
+                    <TableCell className="font-mono text-sm">{t.bin}</TableCell>
+                    <TableCell className="text-sm">{t.material}</TableCell>
+                    <TableCell className="font-mono text-sm">{t.batch}</TableCell>
                     <TableCell className="tabular-nums">{t.qty}</TableCell>
                     <TableCell><StatusBadge value={t.status} /></TableCell>
                   </TableRow>
@@ -89,7 +89,7 @@ export function WavePick() {
           <CardContent className="space-y-4">
             {selected ? (
               <>
-                <div className="rounded-lg border bg-muted/30 p-3 text-xs space-y-1.5">
+                <div className="rounded-lg border bg-muted/30 p-3 text-sm space-y-1.5">
                   <div className="flex justify-between"><span className="text-muted-foreground">已选任务</span><span className="font-mono">{selected.no}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">目标货位</span><span className="font-mono text-info">{selected.bin}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">批次</span><span className="font-mono">{selected.batch}</span></div>
@@ -102,7 +102,7 @@ export function WavePick() {
                     <Input placeholder="扫描或输入货位码" value={binCode} onChange={(e) => setBinCode(e.target.value)} />
                     <Button variant="outline" size="icon" onClick={() => setBinCode(selected.bin)}><ScanLine className="h-4 w-4" /></Button>
                   </div>
-                  {binCode && <p className={`text-xs ${binCode === selected.bin ? 'text-success' : 'text-destructive'}`}>
+                  {binCode && <p className={`text-sm ${binCode === selected.bin ? 'text-success' : 'text-destructive'}`}>
                     货位码匹配：{binCode === selected.bin ? '✓ 一致' : '✗ 不一致'}
                   </p>}
                 </div>
@@ -113,7 +113,7 @@ export function WavePick() {
                     <Input placeholder="扫描或输入批次码" value={batchCode} onChange={(e) => setBatchCode(e.target.value)} />
                     <Button variant="outline" size="icon" onClick={() => setBatchCode(selected.batch)}><ScanLine className="h-4 w-4" /></Button>
                   </div>
-                  {batchCode && <p className={`text-xs ${batchCode === selected.batch ? 'text-success' : 'text-destructive'}`}>
+                  {batchCode && <p className={`text-sm ${batchCode === selected.batch ? 'text-success' : 'text-destructive'}`}>
                     批次码匹配：{batchCode === selected.batch ? '✓ 一致' : '✗ 不一致'}
                   </p>}
                 </div>
@@ -121,7 +121,7 @@ export function WavePick() {
                 <div className="space-y-2">
                   <Label>实拣数量</Label>
                   <Input type="number" value={qty} onChange={(e) => setQty(Number(e.target.value))} />
-                  {qty < selected.qty && <p className="text-xs text-warning">短拣：将按缺量流程处理，需填写原因。</p>}
+                  {qty < selected.qty && <p className="text-sm text-warning">短拣：将按缺量流程处理，需填写原因。</p>}
                 </div>
 
                 <Button className="w-full" onClick={submit} disabled={submitting}>

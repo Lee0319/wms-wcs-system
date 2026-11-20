@@ -51,7 +51,7 @@ export function Receiving() {
             <div key={label} className="flex items-center gap-2">
               <div className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${step === n ? 'bg-primary text-primary-foreground' : step > n ? 'bg-success/15 text-success' : 'bg-muted text-muted-foreground'}`}>
                 {step > n ? <CheckCircle2 className="h-3.5 w-3.5" /> : <span className="text-xs font-medium">{n}</span>}
-                <span className="text-xs">{label}</span>
+                <span className="text-sm">{label}</span>
               </div>
               {n < 4 && <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />}
             </div>
@@ -77,10 +77,10 @@ export function Receiving() {
                   className={`w-full text-left rounded-lg border p-3 transition-colors ${selected?.id === o.id ? 'border-primary bg-primary/5' : 'hover:bg-accent'}`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono text-xs font-medium">{o.no}</span>
+                    <span className="font-mono text-sm font-medium">{o.no}</span>
                     <StatusBadge value={o.status} />
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1.5">{o.source} · {o.supplier}</div>
+                  <div className="text-sm text-muted-foreground mt-1.5">{o.source} · {o.supplier}</div>
                   <div className="flex items-center justify-between mt-2 text-[11px]">
                     <span className="text-muted-foreground">{o.arrival}</span>
                     <span className={o.pending > 0 ? 'text-warning' : 'text-success'}>{o.lines} 行 · 待上架 {o.pending} 行</span>
@@ -97,7 +97,7 @@ export function Receiving() {
             <CardTitle className="text-base flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">{step}</span>
               {['选择收货单', '上架建议', '扫码录入', '确认上架'][step - 1]}
-              {selected && <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">{selected.no}</span>}
+              {selected && <span className="ml-2 font-mono text-sm font-normal text-muted-foreground">{selected.no}</span>}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -112,7 +112,7 @@ export function Receiving() {
                 <Button className="w-full" disabled={!selected || selected.pending === 0} onClick={() => setStep(2)}>
                   查看上架建议 <ArrowRight className="h-4 w-4" />
                 </Button>
-                {selected?.pending === 0 && <p className="text-xs text-center text-muted-foreground">该收货单已无待上架明细，请选择其他单据。</p>}
+                {selected?.pending === 0 && <p className="text-sm text-center text-muted-foreground">该收货单已无待上架明细，请选择其他单据。</p>}
               </div>
             )}
 
@@ -125,10 +125,10 @@ export function Receiving() {
                   <TableBody>
                     {['SKU-1001', 'SKU-1004', 'SKU-1007'].map((code, i) => (
                       <TableRow key={code}>
-                        <TableCell className="text-xs font-medium">{code}</TableCell>
-                        <TableCell className="text-xs">B-202600{i + 1} / {200 + i * 50} 件</TableCell>
+                        <TableCell className="text-sm font-medium">{code}</TableCell>
+                        <TableCell className="text-sm">B-202600{i + 1} / {200 + i * 50} 件</TableCell>
                         <TableCell><Badge variant="info" className="font-mono">A0{i + 1}A{String(5 + i).padStart(2, '0')}</Badge></TableCell>
-                        <TableCell className="text-xs text-muted-foreground">{i === 1 ? `G-A0${i + 1}-A1 · 第 ${i + 2} 位` : '—'}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{i === 1 ? `G-A0${i + 1}-A1 · 第 ${i + 2} 位` : '—'}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -148,7 +148,7 @@ export function Receiving() {
                     <Input placeholder="扫描或输入托盘码" value={pallet} onChange={(e) => setPallet(e.target.value)} />
                     <Button variant="outline" onClick={() => { setPallet('PT-2611-015'); toast.success('托盘码已录入：PT-2611-015') }}><ScanLine className="h-4 w-4" /> 扫一扫</Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">扫码枪可直接扫入输入框并按回车；手机请点「扫一扫」。</p>
+                  <p className="text-sm text-muted-foreground">扫码枪可直接扫入输入框并按回车；手机请点「扫一扫」。</p>
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1.5"><ScanLine className="h-3.5 w-3.5" /> 入库口编码 <span className="text-destructive">*</span></Label>
@@ -172,7 +172,7 @@ export function Receiving() {
                   <div className="flex justify-between"><span className="text-muted-foreground">托盘码</span><span className="font-mono">{pallet}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">入库口</span><span className="font-mono">{port}</span></div>
                 </div>
-                <p className="text-xs text-muted-foreground">提交后系统自动写库存 / 托盘绑定 / 出入库流水，并下发 WCS 上架任务。</p>
+                <p className="text-sm text-muted-foreground">提交后系统自动写库存 / 托盘绑定 / 出入库流水，并下发 WCS 上架任务。</p>
                 <div className="flex gap-2">
                   <Button variant="outline" onClick={() => setStep(3)}>上一步</Button>
                   <Button className="flex-1" onClick={submit} disabled={submitting}>

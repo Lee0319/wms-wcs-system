@@ -66,7 +66,7 @@ export function SettingsSheet() {
           <div className="mt-6 space-y-3">
             <div>
               <div className="text-sm font-medium">侧栏样式</div>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 选择左侧导航栏的布局形态，设置会自动保存。
               </p>
             </div>
@@ -91,7 +91,7 @@ export function SettingsSheet() {
                         <span className="text-sm font-medium">{opt.label}</span>
                         {active && <Check className="h-3.5 w-3.5 text-primary" />}
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                         {opt.desc}
                       </p>
                     </div>
@@ -102,7 +102,7 @@ export function SettingsSheet() {
 
             <Separator />
 
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               切换到「贴边 sidebar」或「浮动 floating」后，内容区将不再显示为圆角卡片；
               「内嵌 inset」会保留页面浅灰底与白色内容卡片。
             </p>

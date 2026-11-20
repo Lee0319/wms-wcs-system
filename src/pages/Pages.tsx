@@ -53,11 +53,11 @@ function DeviceMonitor() {
               <TableBody>
                 {devices.slice(0, 10).map((d) => (
                   <TableRow key={d.id}>
-                    <TableCell className="font-mono text-xs">{d.code}</TableCell>
-                    <TableCell className="text-xs">{d.type}</TableCell>
-                    <TableCell className="text-xs">{d.aisle}</TableCell>
+                    <TableCell className="font-mono text-sm">{d.code}</TableCell>
+                    <TableCell className="text-sm">{d.type}</TableCell>
+                    <TableCell className="text-sm">{d.aisle}</TableCell>
                     <TableCell><StatusBadge value={d.status} /></TableCell>
-                    <TableCell className="w-24"><div className="flex items-center gap-2"><Progress value={d.load} className="h-1.5" /><span className="text-xs tabular-nums">{d.load}%</span></div></TableCell>
+                    <TableCell className="w-24"><div className="flex items-center gap-2"><Progress value={d.load} className="h-1.5" /><span className="text-sm tabular-nums">{d.load}%</span></div></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -72,11 +72,11 @@ function DeviceMonitor() {
               <TableBody>
                 {tasks.slice(0, 10).map((t) => (
                   <TableRow key={t.id}>
-                    <TableCell className="font-mono text-xs">{t.no}</TableCell>
-                    <TableCell className="text-xs">{t.type}</TableCell>
-                    <TableCell className="font-mono text-xs">{t.device}</TableCell>
+                    <TableCell className="font-mono text-sm">{t.no}</TableCell>
+                    <TableCell className="text-sm">{t.type}</TableCell>
+                    <TableCell className="font-mono text-sm">{t.device}</TableCell>
                     <TableCell><StatusBadge value={t.status} /></TableCell>
-                    <TableCell className="w-24"><div className="flex items-center gap-2"><Progress value={t.progress} className="h-1.5" /><span className="text-xs tabular-nums">{t.progress}%</span></div></TableCell>
+                    <TableCell className="w-24"><div className="flex items-center gap-2"><Progress value={t.progress} className="h-1.5" /><span className="text-sm tabular-nums">{t.progress}%</span></div></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -99,16 +99,16 @@ function RuleConfig() {
   return (
     <div className="space-y-4">
       <PageHeader title="规则与策略配置" description="FIFO / 混批 / 单向流 / 就近分配策略开关" group="WCS 与配置" />
-      <div className="grid gap-3 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {rules.map((r) => (
           <Card key={r.id}>
-            <CardContent className="p-4 flex items-start justify-between gap-4">
+            <CardContent className="p-6 flex items-start justify-between gap-4">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-sm">{r.name}</span>
                   <Badge variant="outline" className="font-mono text-[10px]">{r.code}</Badge>
                 </div>
-                <p className="text-xs text-muted-foreground">{r.desc}</p>
+                <p className="text-sm text-muted-foreground">{r.desc}</p>
                 <div className="flex items-center gap-1.5 pt-1">
                   <StatusBadge value={r.enabled ? '启用' : '停用'} />
                 </div>
@@ -148,7 +148,7 @@ function StrategyGuide() {
             <CardContent>
               <ul className="space-y-2">
                 {g.items.map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-xs">
+                  <li key={item} className="flex items-center gap-2 text-sm">
                     <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" /> {item}
                   </li>
                 ))}
@@ -179,7 +179,7 @@ export function WcsPages({ id }: { id: string }) {
 // ============ 权限管理 / 系统查看 ============
 
 const accountColumns: Column[] = [
-  { key: 'username', title: '登录账号', render: (r) => <span className="font-mono text-xs">{r.username}</span> },
+  { key: 'username', title: '登录账号', render: (r) => <span className="font-mono text-sm">{r.username}</span> },
   { key: 'realName', title: '实名' },
   { key: 'role', title: '角色', render: (r) => <Badge variant="outline">{r.role}</Badge> },
   { key: 'phone', title: '电话' },
@@ -200,7 +200,7 @@ function UserManagement() {
   return (
     <div className="space-y-4">
       <PageHeader title="用户管理" description="账号 / 角色 / 联系方式 · 密码编辑留空表示不修改" group="权限管理" />
-      <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-xs text-info">
+      <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-sm text-info">
         新增账号密码必填；编辑时密码留空表示不修改。锁定仓库用于料箱库页固定仓库，留空 = 全部仓库。
       </div>
       <Tabs defaultValue="accounts">
@@ -213,7 +213,7 @@ function UserManagement() {
         </TabsContent>
         <TabsContent value="roles" className="mt-4">
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-6">
               <Table>
                 <TableHeader><TableRow className="bg-muted/40"><TableHead>角色编号</TableHead><TableHead>角色名称</TableHead><TableHead>权限标识</TableHead><TableHead>说明</TableHead></TableRow></TableHeader>
                 <TableBody>
@@ -225,10 +225,10 @@ function UserManagement() {
                     ['R05', '数据管理员', 'wms:view, wms:data, wms:log', '数据管理与日志'],
                   ].map((r) => (
                     <TableRow key={r[0]}>
-                      <TableCell className="font-mono text-xs">{r[0]}</TableCell>
+                      <TableCell className="font-mono text-sm">{r[0]}</TableCell>
                       <TableCell className="text-sm font-medium">{r[1]}</TableCell>
-                      <TableCell><code className="text-xs bg-muted px-1.5 py-0.5 rounded">{r[2]}</code></TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{r[3]}</TableCell>
+                      <TableCell><code className="text-sm bg-muted px-1.5 py-0.5 rounded">{r[2]}</code></TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{r[3]}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -267,12 +267,12 @@ function DataManagement() {
 }
 
 const logColumns: Column[] = [
-  { key: 'time', title: '时间', render: (r) => <span className="font-mono text-xs">{r.time}</span> },
+  { key: 'time', title: '时间', render: (r) => <span className="font-mono text-sm">{r.time}</span> },
   { key: 'level', title: '级别', render: (r) => <StatusBadge value={r.level} /> },
   { key: 'module', title: '模块' },
   { key: 'user', title: '操作员' },
   { key: 'action', title: '操作' },
-  { key: 'detail', title: '详情', render: (r) => <span className="text-xs text-muted-foreground">{r.detail}</span> },
+  { key: 'detail', title: '详情', render: (r) => <span className="text-sm text-muted-foreground">{r.detail}</span> },
 ]
 
 function LogViewer() {
@@ -281,7 +281,7 @@ function LogViewer() {
     <div className="space-y-4">
       <PageHeader title="日志查看" description="按级别 / 模块过滤最近 300 条操作日志" group="系统查看" />
       <Card>
-        <CardContent className="p-4">
+        <CardContent className="p-6">
           <div className="flex gap-2 mb-4">
             {['全部级别', '信息', '成功', '警告', '错误'].map((l) => (
               <Button key={l} size="sm" variant={level === l ? 'default' : 'outline'} onClick={() => setLevel(l)}>{l}</Button>
@@ -318,7 +318,7 @@ function LogTable({ level }: { level: string }) {
 
 const recycleColumns: Column[] = [
   { key: 'type', title: '类型', render: (r) => <Badge variant="outline">{r.type}</Badge> },
-  { key: 'name', title: '名称', render: (r) => <span className="font-mono text-xs">{r.name}</span> },
+  { key: 'name', title: '名称', render: (r) => <span className="font-mono text-sm">{r.name}</span> },
   { key: 'deletedAt', title: '删除时间' },
   { key: 'operator', title: '操作人' },
   { key: 'reason', title: '原因' },
@@ -328,7 +328,7 @@ function RecycleBin() {
   return (
     <div className="space-y-4">
       <PageHeader title="回收站" description="已删除单据快照 / 恢复 / 彻底删除" group="系统查看" />
-      <div className="rounded-lg border bg-warning/10 px-4 py-2.5 text-xs text-warning">
+      <div className="rounded-lg border bg-warning/10 px-4 py-2.5 text-sm text-warning">
         恢复单据时会重建主表与明细；恢复已上架单据时将回补库存。
       </div>
       <CrudTable table="recycleItems" columns={recycleColumns} searchFields={['name', 'type']}
@@ -369,7 +369,7 @@ function TableDesign() {
             <div className="space-y-1 max-h-[520px] overflow-y-auto">
               {tables.map((t) => (
                 <button key={t.name} onClick={() => setSelected(t)}
-                  className={cn('w-full text-left rounded-md px-3 py-2 text-xs transition-colors',
+                  className={cn('w-full text-left rounded-md px-3 py-2 text-sm transition-colors',
                     selected?.name === t.name ? 'bg-primary text-primary-foreground' : 'hover:bg-accent')}>
                   <div className="font-mono">{t.name}</div>
                   <div className={cn('text-[10px]', selected?.name === t.name ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{t.cn}</div>
@@ -390,10 +390,10 @@ function TableDesign() {
                 <TableBody>
                   {selected.fields.map((f) => (
                     <TableRow key={f.name}>
-                      <TableCell className="font-mono text-xs">{f.name}</TableCell>
-                      <TableCell><code className="text-xs bg-muted px-1.5 py-0.5 rounded">{f.type}</code></TableCell>
-                      <TableCell className="text-xs">{f.nullable ? '是' : '否'}</TableCell>
-                      <TableCell className="text-xs text-muted-foreground">{f.comment}</TableCell>
+                      <TableCell className="font-mono text-sm">{f.name}</TableCell>
+                      <TableCell><code className="text-sm bg-muted px-1.5 py-0.5 rounded">{f.type}</code></TableCell>
+                      <TableCell className="text-sm">{f.nullable ? '是' : '否'}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{f.comment}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -425,7 +425,7 @@ function FormDesign() {
             <div className="rounded-lg border border-dashed min-h-[320px] flex flex-col items-center justify-center text-center text-muted-foreground gap-2">
               <PanelTop className="h-10 w-10 opacity-40" />
               <div className="text-sm">窗体设计画布</div>
-              <div className="text-xs">从左侧控件库拖入控件以设计表单布局</div>
+              <div className="text-sm">从左侧控件库拖入控件以设计表单布局</div>
             </div>
           </CardContent>
         </Card>

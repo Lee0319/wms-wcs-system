@@ -31,7 +31,7 @@ export function BoxPutaway() {
     <div className="space-y-4">
       <PageHeader title="料箱库上架" description="二楼料箱库 · 呼叫库内物料 / 重新组托上架 / 直接上架" group="入库与库存" />
 
-      <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-xs text-info flex items-center gap-2">
+      <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-sm text-info flex items-center gap-2">
         <Badge variant="info">仓库 / 库区</Badge>
         按仓库 / 库区限定物料范围；当前已锁定 <strong>WH01 / 二楼料箱库</strong>，如需变更请联系管理员。
       </div>
@@ -53,15 +53,15 @@ export function BoxPutaway() {
               {details.map((d) => (
                 <TableRow key={d.id}>
                   <TableCell><Checkbox checked={checked.includes(d.id)} onCheckedChange={(c) => setChecked(c ? [...checked, d.id] : checked.filter((x) => x !== d.id))} /></TableCell>
-                  <TableCell className="font-mono text-xs">{d.no}</TableCell>
-                  <TableCell className="text-xs"><div className="font-medium">{d.material}</div><div className="text-muted-foreground font-mono">{d.batch}</div></TableCell>
+                  <TableCell className="font-mono text-sm">{d.no}</TableCell>
+                  <TableCell className="text-sm"><div className="font-medium">{d.material}</div><div className="text-xs text-muted-foreground font-mono">{d.batch}</div></TableCell>
                   <TableCell className="tabular-nums">{d.qty}</TableCell>
                   <TableCell><StatusBadge value="待上架" /></TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          <div className="mt-3 text-xs text-muted-foreground">已勾选 {checked.length} 行 · 合计 {total} 件</div>
+          <div className="mt-3 text-sm text-muted-foreground">已勾选 {checked.length} 行 · 合计 {total} 件</div>
         </CardContent>
       </Card>
 
@@ -74,7 +74,7 @@ export function BoxPutaway() {
 
         <TabsContent value="direct" className="mt-4">
           <Card>
-            <CardContent className="p-5 space-y-4">
+            <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
                 <Label>托盘码 <span className="text-destructive">*</span></Label>
                 <div className="flex gap-2">
@@ -103,10 +103,10 @@ export function BoxPutaway() {
 
         <TabsContent value="call" className="mt-4">
           <Card>
-            <CardContent className="p-5 space-y-4">
+            <CardContent className="p-6 space-y-4">
               <div className="rounded-lg border p-4">
                 <div className="text-sm font-medium mb-2">库内在库托盘</div>
-                <div className="text-xs text-muted-foreground space-y-1">
+                <div className="text-sm text-muted-foreground space-y-1">
                   <div>SKU-1001 · B-2026001 · 180 件 · 位于 SHIP1</div>
                   <div className="text-warning">AGV 送达中… 预计 2 分钟</div>
                 </div>
@@ -121,10 +121,10 @@ export function BoxPutaway() {
 
         <TabsContent value="regroup" className="mt-4">
           <Card>
-            <CardContent className="p-5 space-y-4">
+            <CardContent className="p-6 space-y-4">
               <div className="rounded-lg border bg-muted/30 p-4 text-sm space-y-2">
                 <div className="font-medium">合并明细说明</div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   原托 180 件 + 新收 {total} 件，将写入同一货位 / 同一托盘，明细自动转「已上架」。
                 </p>
               </div>

@@ -5,7 +5,7 @@ import { CrudTable, type Column, type FormField } from '@/components/shared/Crud
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const inColumns: Column[] = [
-  { key: 'no', title: '收货单号', render: (r) => <span className="font-mono text-xs">{r.no}</span> },
+  { key: 'no', title: '收货单号', render: (r) => <span className="font-mono text-sm">{r.no}</span> },
   { key: 'source', title: '单据来源' },
   { key: 'supplier', title: '来源供应商' },
   { key: 'arrival', title: '到货时间' },
@@ -14,7 +14,7 @@ const inColumns: Column[] = [
   { key: 'status', title: '状态', render: (r) => <StatusBadge value={r.status} /> },
 ]
 const outColumns: Column[] = [
-  { key: 'no', title: '出库订单号', render: (r) => <span className="font-mono text-xs">{r.no}</span> },
+  { key: 'no', title: '出库订单号', render: (r) => <span className="font-mono text-sm">{r.no}</span> },
   { key: 'customer', title: '客户 / 部门' },
   { key: 'type', title: '订单类型' },
   { key: 'priority', title: '优先级', render: (r) => <StatusBadge value={r.priority} /> },

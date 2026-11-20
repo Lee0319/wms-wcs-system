@@ -40,7 +40,7 @@ export function AisleMonitor() {
             <CardDescription>入库口在左端、出库口在右端，堆垛机单向作业</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2 mb-4 text-xs">
+            <div className="flex items-center gap-2 mb-4 text-sm">
               <Badge variant="info" className="gap-1"><ArrowRight className="h-3 w-3" /> 入库端</Badge>
               <div className="flex-1 h-1.5 rounded-full bg-gradient-to-r from-info/30 via-border to-success/30" />
               <Badge variant="success" className="gap-1">出库端 <ArrowRight className="h-3 w-3" /></Badge>
@@ -67,7 +67,7 @@ export function AisleMonitor() {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3 mt-4 pt-4 border-t text-xs">
+            <div className="flex flex-wrap gap-3 mt-4 pt-4 border-t text-sm">
               {[
                 ['在库', 'bg-success/15 border-success/40'], ['空货位', 'bg-muted border-border'],
                 ['锁定', 'bg-warning/15 border-warning/40'], ['拣选中', 'bg-info/15 border-info/40'],
@@ -91,13 +91,13 @@ export function AisleMonitor() {
                 <>
                   <div className="flex justify-between"><span className="text-muted-foreground">巷道编码</span><span className="font-mono">{a.code}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">所属库区</span><span>{a.zone}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">绑定物料</span><span className="font-mono text-xs">{a.material}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">绑定物料</span><span className="font-mono text-sm">{a.material}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">作业方向</span><StatusBadge value={a.direction} /></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">堆垛机</span><span>{a.stacker || '—'}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">货位数</span><span>{a.binCount}</span></div>
                   <div className="pt-3 border-t mt-3">
-                    <div className="text-xs text-muted-foreground mb-1.5">堆垛机状态</div>
-                    <div className="flex items-center justify-between"><StatusBadge value="运行" /><span className="text-xs text-muted-foreground">负载 62%</span></div>
+                    <div className="text-sm text-muted-foreground mb-1.5">堆垛机状态</div>
+                    <div className="flex items-center justify-between"><StatusBadge value="运行" /><span className="text-sm text-muted-foreground">负载 62%</span></div>
                   </div>
                 </>
               )

@@ -7,7 +7,7 @@ import { CrudTable, type Column, type FormField } from '@/components/shared/Crud
 import { Button } from '@/components/ui/button'
 
 const columns: Column[] = [
-  { key: 'no', title: '出库订单号', render: (r) => <span className="font-mono text-xs">{r.no}</span> },
+  { key: 'no', title: '出库订单号', render: (r) => <span className="font-mono text-sm">{r.no}</span> },
   { key: 'customer', title: '客户 / 部门' },
   { key: 'type', title: '订单类型' },
   { key: 'priority', title: '优先级', render: (r) => <StatusBadge value={r.priority} /> },
@@ -38,7 +38,7 @@ export function OutboundOrders() {
           </Button>
         }
       />
-      <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-xs text-info">
+      <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-sm text-info">
         FIFO 按入库日期升序分配，锁定批次不参与分配；分配后预占 reserved_qty 并生成拣选任务，出库后自动写流水。
       </div>
       <CrudTable

@@ -11,7 +11,7 @@ interface Config {
 }
 
 const str = (key: string, title: string, width?: string): Column => ({ key, title, width })
-const mono = (key: string, title: string): Column => ({ key, title, render: (r) => <span className="font-mono text-xs">{r[key] ?? '—'}</span> })
+const mono = (key: string, title: string): Column => ({ key, title, render: (r) => <span className="font-mono text-sm">{r[key] ?? '—'}</span> })
 const status = (key = 'status'): Column => ({ key, title: '状态', render: (r) => <StatusBadge value={r[key]} /> })
 
 export const BASE_CONFIGS: Record<string, { title: string; desc: string; config: Config }> = {
@@ -210,7 +210,7 @@ export function BaseDataPage({ id }: { id: string }) {
     <div className="space-y-4">
       <PageHeader title={entry.title} description={entry.desc} group={getGroupLabel(id)} perm={item?.perm} />
       {entry.config.note && (
-        <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-xs text-info">
+        <div className="rounded-lg border bg-info/10 px-4 py-2.5 text-sm text-info">
           {entry.config.note}
         </div>
       )}

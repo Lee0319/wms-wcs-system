@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden text-left leading-tight sm:block">
-                  <div className="text-xs font-medium">{user?.username}</div>
+                  <div className="text-sm font-medium">{user?.username}</div>
                   <div className="text-[10px] text-muted-foreground">{user?.role}</div>
                 </div>
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />

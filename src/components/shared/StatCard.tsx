@@ -22,7 +22,7 @@ const toneMap = {
 export function StatCard({ title, value, icon: Icon, hint, trend, tone = 'blue' }: Props) {
   return (
     <Card>
-      <CardContent className="p-5">
+      <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">{title}</p>

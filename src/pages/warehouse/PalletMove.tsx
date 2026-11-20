@@ -27,7 +27,7 @@ export function PalletMove() {
           <CardHeader><CardTitle className="text-base flex items-center gap-2"><ArrowLeftRight className="h-4 w-4" /> 移库登记</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2"><Label>托盘码 <span className="text-destructive">*</span></Label><Input placeholder="如 PT-2611-015" defaultValue="PT-2611-015" /></div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2"><Label>源货位</Label><Input defaultValue="A01A05" /></div>
               <div className="space-y-2"><Label>目标货位</Label><Input placeholder="如 A01A08" /></div>
             </div>
@@ -59,17 +59,17 @@ export function PalletMove() {
               { mat: 'SKU-1007 伺服电机', from: 'A03A18', to: 'A03A06', qty: 80 },
             ].map((r, i) => (
               <div key={i} className="rounded-lg border p-3 flex items-center justify-between">
-                <div className="text-xs space-y-1">
+                <div className="text-sm space-y-1">
                   <div className="font-medium">{r.mat}</div>
                   <div className="text-muted-foreground font-mono">{r.from} → {r.to}</div>
                 </div>
                 <div className="text-right">
                   <Badge variant="info">{r.qty} 件</Badge>
-                  <Button variant="link" size="sm" className="block ml-auto h-6 text-xs" onClick={move}>归并</Button>
+                  <Button variant="link" size="sm" className="block ml-auto h-6 text-sm" onClick={move}>归并</Button>
                 </div>
               </div>
             ))}
-            <p className="text-xs text-muted-foreground pt-2">归并后源货位释放，已下发堆垛机倒库任务。</p>
+            <p className="text-sm text-muted-foreground pt-2">归并后源货位释放，已下发堆垛机倒库任务。</p>
           </CardContent>
         </Card>
       </div>

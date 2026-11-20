@@ -163,30 +163,40 @@ export const pallets: Pallet[] = Array.from({ length: 40 }, (_, i) => ({
 // ---- 库存 ----
 export interface Inventory {
   id: string; binCode: string; aisle: string; zone: string; face: string; column: number;
-  materialCode: string; materialName: string; spec: string; batch: string;
-  qty: number; reserved: number; palletCode: string; inDate: string; expiry: string; age: number; quality: string
+  materialCode: string; materialName: string; spec: string; unit: string; batch: string;
+  qty: number; reserved: number; palletCode: string; inDate: string; expiry: string; age: number;
+  supplier: string; customer: string; quality: string
 }
-const batches = ['B-2026001', 'B-2026015', 'B-2026032', 'B-2026048', 'B-2026060']
+const batches = Array.from({ length: 20 }, (_, i) => `B26${String(1001 + i)}-${String((i % 4) + 1).padStart(2, '0')}`)
+const suppliers = partners.filter((p) => p.type === '供应商').map((p) => p.name)
+const customers = partners.filter((p) => p.type === '客户').map((p) => p.name)
 export const inventory: Inventory[] = Array.from({ length: 90 }, (_, i) => {
   const m = pick(materials)
   const age = rnd(1, 120)
+  const aisle = `A0${(i % 5) + 1}`
+  const face = i % 2 ? 'B' : 'A'
+  const column = Math.floor(i / 10) + 1
+  const binCode = `${aisle}-${face}-${String(column).padStart(2, '0')}`
   return {
     id: `IV${i + 1}`,
-    binCode: `${pick(['A01', 'A02', 'A03', 'A04', 'A05'])}${pick(['A', 'B'])}${String(rnd(1, 20)).padStart(2, '0')}`,
-    aisle: pick(['A01', 'A02', 'A03', 'A04', 'A05']),
+    binCode,
+    aisle,
     zone: pick(['ZK01', 'ZK02', 'ZK03']),
-    face: pick(['A', 'B']),
-    column: rnd(1, 20),
+    face,
+    column,
     materialCode: m.code,
     materialName: m.name,
     spec: m.spec,
+    unit: m.unit,
     batch: pick(batches),
-    qty: rnd(10, 500),
-    reserved: rnd(0, 60),
-    palletCode: `PT-2611-${String(rnd(1, 40)).padStart(3, '0')}`,
+    qty: rnd(10, 60),
+    reserved: pick([0, 0, 0, rnd(1, 20)]),
+    palletCode: `PT-${binCode}`,
     inDate: daysAgo(age),
     expiry: m.shelfLife ? daysAfter(m.shelfLife - age) : '',
     age,
+    supplier: pick(suppliers),
+    customer: pick(customers),
     quality: pick(['合格', '合格', '合格', '待检']),
   }
 })
@@ -247,20 +257,21 @@ export const devices: Device[] = Array.from({ length: 14 }, (_, i) => ({
   heartbeat: '刚刚',
 }))
 
-export interface WcsTask { id: string; no: string; type: string; device: string; aisle: string; status: string; progress: number; created: string }
+export interface WcsTask { id: string; no: string; type: string; device: string; aisle: string; bin: string; status: string; progress: number; created: string }
 export const wcsTasks: WcsTask[] = Array.from({ length: 20 }, (_, i) => ({
   id: `T${i + 1}`,
   no: `WCS-${String(2026000 + i).padStart(7, '0')}`,
   type: pick(['上架', '下架', '移库', '倒库', '补给']),
   device: pick(devices).code,
   aisle: pick(['A01', 'A02', 'A03', 'A04']),
+  bin: `${pick(['A01', 'A02', 'A03', 'A04'])}-${pick(['A', 'B'])}-${String(rnd(1, 20)).padStart(2, '0')}`,
   status: pick(['排队中', '执行中', '运送中', '已完成', '异常']),
   progress: rnd(0, 100),
   created: daysAgo(0),
 }))
 
 // ---- 托盘呼叫 ----
-export interface Call { id: string; no: string; type: string; source: string; target: string; material: string; status: string; time: string }
+export interface Call { id: string; no: string; type: string; source: string; target: string; material: string; status: string; time: string; responseSec: number }
 export const calls: Call[] = Array.from({ length: 10 }, (_, i) => ({
   id: `C${i + 1}`,
   no: `CALL-${String(i + 1).padStart(4, '0')}`,
@@ -270,6 +281,7 @@ export const calls: Call[] = Array.from({ length: 10 }, (_, i) => ({
   material: pick(materials).code,
   status: pick(['待响应', 'AGV 已接单', '搬运中', '已完成', '已取消']),
   time: daysAgo(0),
+  responseSec: rnd(18, 88),
 }))
 
 // ---- 拣选波次 ----
@@ -394,4 +406,10 @@ export const zoneUsage = zones.map((z) => ({
   zone: z.code,
   使用率: rnd(45, 95),
   容量: rnd(500, 2000),
+}))
+
+// 各巷道库位利用率（驾驶舱 · 横向条形图）
+export const aisleUsage = aisles.slice(0, 6).map((a) => ({
+  code: a.code,
+  usage: rnd(50, 82),
 }))

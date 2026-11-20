@@ -3,7 +3,6 @@ import { Search, Plus, RefreshCw, Pencil, Trash2, ChevronLeft, ChevronRight, Dow
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
@@ -122,20 +121,19 @@ export function CrudTable({
   }
 
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
-          <div className="flex items-center gap-2 flex-1 max-w-sm">
-            <div className="relative w-full">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+    <div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="relative w-80 max-w-full">
+              <Search className="absolute left-2.5 top-2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="搜索…"
-                className="pl-8"
+                className="h-8 pl-8"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon" onClick={load} title="刷新">
+            <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" onClick={load} title="刷新">
               <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
@@ -194,7 +192,6 @@ export function CrudTable({
             </Button>
           </div>
         </div>
-      </CardContent>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
@@ -241,6 +238,6 @@ export function CrudTable({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </div>
   )
 }

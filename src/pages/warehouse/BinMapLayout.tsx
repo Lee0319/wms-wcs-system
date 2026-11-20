@@ -82,7 +82,7 @@ export function BinMapLayout() {
           <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><MousePointer2 className="h-4 w-4" /> 画笔工具</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-xs">画笔类型</Label>
+              <Label className="text-sm">画笔类型</Label>
               <div className="grid gap-2">
                 {[
                   { key: 'bin' as Brush, label: '库位格', icon: Square, cls: 'bg-success/15 border-success/40 text-success' },
@@ -90,7 +90,7 @@ export function BinMapLayout() {
                   { key: 'mixed' as Brush, label: '通道 + 库位混合', icon: Layers3, cls: 'bg-warning/15 border-warning/40 text-warning' },
                 ].map(({ key, label, icon: Icon, cls }) => (
                   <button key={key} onClick={() => setBrush(key)}
-                    className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-all',
+                    className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all',
                       brush === key ? cn(cls, 'ring-2 ring-primary/30') : 'bg-background hover:bg-accent')}>
                     <Icon className="h-3.5 w-3.5" /> {label}
                   </button>
@@ -102,7 +102,7 @@ export function BinMapLayout() {
             <Separator />
 
             <div className="space-y-2">
-              <Label className="text-xs">图纸设置</Label>
+              <Label className="text-sm">图纸设置</Label>
               <div className="grid grid-cols-2 gap-2">
                 <div><Label className="text-[10px] text-muted-foreground">行</Label><Input className="h-8" defaultValue={ROWS} readOnly /></div>
                 <div><Label className="text-[10px] text-muted-foreground">列</Label><Input className="h-8" defaultValue={COLS} readOnly /></div>
@@ -124,7 +124,7 @@ export function BinMapLayout() {
 
             <Separator />
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2 text-sm">
               <div className="font-medium flex items-center gap-1.5"><Route className="h-3.5 w-3.5" /> 统计</div>
               <div className="flex justify-between"><span className="text-muted-foreground">库位格</span><Badge variant="success">{binCount}</Badge></div>
               <div className="flex justify-between"><span className="text-muted-foreground">AGV 通道格</span><Badge variant="info">{channelCount}</Badge></div>
@@ -138,7 +138,7 @@ export function BinMapLayout() {
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center justify-between">
               <span>库位图 · {ROWS} 行 × {COLS} 列</span>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm border border-success/40 bg-success/15" /> 库位格</span>
                 <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm border border-info/40 bg-info/15" /> AGV 通道</span>
                 <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm border border-border bg-muted" /> 空位</span>
@@ -174,9 +174,9 @@ export function BinMapLayout() {
                 ))}
               </div>
             </div>
-            <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+            <div className="mt-3 flex items-center justify-between text-sm text-muted-foreground">
               <span>A 面 / AGV 取货通道 / B 面 · 通道左右两端进出</span>
-              <Button variant="link" size="sm" className="h-6 text-xs" onClick={autoLayout}>按默认规则重新排布</Button>
+              <Button variant="link" size="sm" className="h-6 text-sm" onClick={autoLayout}>按默认规则重新排布</Button>
             </div>
           </CardContent>
         </Card>

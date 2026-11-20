@@ -8,14 +8,14 @@ import { allTable } from '@/api/adapter'
 import type { TrayArea } from '@/mock/data'
 
 const columns: Column[] = [
-  { key: 'code', title: '区域编码', render: (r) => <span className="font-mono text-xs">{r.code}</span> },
+  { key: 'code', title: '区域编码', render: (r) => <span className="font-mono text-sm">{r.code}</span> },
   { key: 'name', title: '区域名称' },
   { key: 'capacity', title: '容量', render: (r) => <span className="tabular-nums">{r.capacity}</span> },
   { key: 'pallets', title: '现有托盘', render: (r) => <span className="tabular-nums">{r.pallets}</span> },
   { key: 'warning', title: '预警水位', render: (r) => `${r.warning}%` },
   { key: 'usage', title: '水位', render: (r) => {
     const pct = Math.round((r.pallets / r.capacity) * 100)
-    return <div className="w-24"><Progress value={pct} className={`h-2 ${pct >= r.warning ? '[&>div]:bg-warning/100' : ''}`} /><span className="text-xs text-muted-foreground">{pct}%</span></div>
+    return <div className="w-24"><Progress value={pct} className={`h-2 ${pct >= r.warning ? '[&>div]:bg-warning/100' : ''}`} /><span className="text-sm text-muted-foreground">{pct}%</span></div>
   } },
 ]
 const fields: FormField[] = [
@@ -35,19 +35,19 @@ export function TrayAreaMgmt() {
     <div className="space-y-4">
       <PageHeader title="托盘区域管理" description="5 个区域容量水位 · 托盘明细 · 移库联动" group="库内作业" />
       {warnings.length > 0 && (
-        <div className="rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-xs text-warning flex items-center gap-2">
+        <div className="rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-sm text-warning flex items-center gap-2">
           <AlertTriangle className="h-4 w-4" />
           {warnings.map((a) => a.code).join('、')} 已达预警水位，请及时处理。
         </div>
       )}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {areas.map((a) => {
           const pct = Math.round((a.pallets / a.capacity) * 100)
           return (
             <Card key={a.id}>
-              <CardContent className="p-4 space-y-2">
+              <CardContent className="p-6 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{a.code}</span>
+                  <span className="text-sm text-muted-foreground">{a.code}</span>
                   <RadioTower className="h-4 w-4 text-info" />
                 </div>
                 <div className="text-sm font-medium truncate">{a.name}</div>

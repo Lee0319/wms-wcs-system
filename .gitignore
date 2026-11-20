@@ -32,6 +32,9 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+# TS 增量编译产物
+*.tsbuildinfo
+
 # 缓存
 node_modules/.vite
 node_modules/.vite.bak.*
