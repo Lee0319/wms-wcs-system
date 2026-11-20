@@ -32,9 +32,15 @@ npm run preview      # 预览构建产物
 3. 构建配置：Framework preset 选 **Vite**，Build command `npm run build`，Output directory `dist`
 4. 保存部署，得到 `https://xxx.pages.dev` 地址
 
-### 方式三：GitHub Pages
+### 方式三：GitHub Pages（已配置，开箱即用）
 
-需将仓库设为 Public（或使用 GitHub Pro），并在 **Settings → Pages** 选择 GitHub Actions 部署。
+仓库已包含 `.github/workflows/deploy-pages.yml`，推送到 `main` 即自动构建并发布：
+
+- 访问地址：**https://lee0319.github.io/wms-wcs-system/**
+- Pages 发布源已设为 **GitHub Actions**（Settings → Pages → Build and deployment）
+- 构建时 `vite.config.ts` 会自动把 `base` 切换为 `/wms-wcs-system/`
+
+> 前提：仓库需为 Public（或使用 GitHub Pro）。
 
 > 说明：项目使用 `HashRouter`，路由在 `#` 后，静态托管无需配置 SPA 重写规则。
 
