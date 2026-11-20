@@ -16,24 +16,6 @@ npm run preview      # 预览构建产物
 
 本项目是纯前端静态站（默认使用 Mock 数据，无需后端），可直接托管到任意静态托管平台。
 
-### 方式一：Vercel（推荐，最简单）
-
-1. 打开 [vercel.com](https://vercel.com)，用 GitHub 账号登录
-2. 点 **Add New → Project**，选择 `wms-wcs-system` 仓库
-3. 框架会自动识别为 **Vite**，无需改配置（Build: `npm run build`，Output: `dist`）
-4. 点 **Deploy**，约 1 分钟拿到 `https://xxx.vercel.app` 地址
-
-之后每次 `git push` 都会自动重新部署。
-
-### 方式二：Cloudflare Pages（国内访问更快）
-
-1. 打开 [pages.cloudflare.com](https://pages.cloudflare.com)，用 GitHub 登录
-2. **Create a project → Connect to Git**，选择本仓库
-3. 构建配置：Framework preset 选 **Vite**，Build command `npm run build`，Output directory `dist`
-4. 保存部署，得到 `https://xxx.pages.dev` 地址
-
-### 方式三：GitHub Pages（已配置，开箱即用）
-
 仓库已包含 `.github/workflows/deploy-pages.yml`，推送到 `main` 即自动构建并发布：
 
 - 访问地址：**https://lee0319.github.io/wms-wcs-system/**
