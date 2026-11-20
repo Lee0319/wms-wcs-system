@@ -55,7 +55,7 @@ npm run preview      # 预览构建产物
 
 ```env
 VITE_USE_MOCK=true                        # 本地 Mock（默认，无需后端）
-VITE_API_BASE=http://47.121.29.98:3001    # 真实后端地址
+VITE_API_BASE=http://localhost:3001       # 真实后端地址（按需替换为你的服务）
 ```
 
 - `VITE_USE_MOCK=true`：使用内存 Mock 数据库，所有 CRUD 与业务动作（上架/分配/拣选/呼叫/移库）均可演示。
