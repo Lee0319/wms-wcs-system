@@ -1,6 +1,6 @@
-# WMS-WCS 智能仓储集成系统 · 前端复刻版
+# WMS-WCS 智能仓储集成系统
 
-按 shadcn/ui 设计规范，用 React 复刻原 `http://47.121.29.98:3001/#/` 系统的 PC 主界面。
+按 shadcn/ui 设计规范，用 React 优化PC主界面。
 
 ## 快速运行
 
