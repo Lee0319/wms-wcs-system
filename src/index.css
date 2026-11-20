@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn/create preset（slate 中性底 + 蓝主色），由 OKLCH 转换为 HSL */
+    --background: 0.0 0.0% 100.0%;
+    --foreground: 240.1 11.2% 4.0%;
+    --card: 0.0 0.0% 100.0%;
+    --card-foreground: 240.1 11.2% 4.0%;
+    --popover: 0.0 0.0% 100.0%;
+    --popover-foreground: 240.1 11.2% 4.0%;
+    --primary: 225.3 84.1% 49.0%;
+    --primary-foreground: 213.8 96.5% 96.8%;
+    --secondary: 240.0 3.5% 95.8%;
+    --secondary-foreground: 240.0 6.0% 10.0%;
+    --muted: 240.0 3.5% 95.8%;
+    --muted-foreground: 240.1 4.4% 46.3%;
+    --accent: 240.0 3.5% 95.8%;
+    --accent-foreground: 240.0 6.0% 10.0%;
+    --destructive: 357.2 100.0% 45.3%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240.0 5.9% 90.0%;
+    --input: 240.0 5.9% 90.0%;
+    --ring: 240.1 5.7% 64.3%;
+    --radius: 0.625rem;
+
+    /* 图表语义色：保留彩色以便区分数据系列（preset 原为灰阶） */
+    --chart-1: 221 83% 53%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 84% 60%;
+
+    /* 侧栏语义色 */
+    --sidebar: 180.0 0.0% 98.0%;
+    --sidebar-foreground: 240.1 11.2% 4.0%;
+    --sidebar-primary: 221.3 97.1% 53.5%;
+    --sidebar-primary-foreground: 213.8 96.5% 96.8%;
+    --sidebar-accent: 240.0 3.5% 95.8%;
+    --sidebar-accent-foreground: 240.0 6.0% 10.0%;
+    --sidebar-border: 240.0 5.9% 90.0%;
+    --sidebar-ring: 240.1 5.7% 64.3%;
+
+    /* 扩展状态色（项目扩展，preset 未提供） */
+    --success: 142 72% 29%;
+    --success-foreground: 0 0% 100%;
+    --warning: 32 95% 44%;
+    --warning-foreground: 0 0% 100%;
+    --info: 221 83% 53%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 240.1 11.2% 4.0%;
+    --foreground: 180.0 0.0% 98.0%;
+    --card: 240.0 6.0% 10.0%;
+    --card-foreground: 180.0 0.0% 98.0%;
+    --popover: 240.0 6.0% 10.0%;
+    --popover-foreground: 180.0 0.0% 98.0%;
+    --primary: 227.1 75.7% 41.1%;
+    --primary-foreground: 213.8 96.5% 96.8%;
+    --secondary: 240.0 4.0% 15.9%;
+    --secondary-foreground: 180.0 0.0% 98.0%;
+    --muted: 240.0 4.0% 15.9%;
+    --muted-foreground: 240.1 5.7% 64.3%;
+    --accent: 240.0 4.0% 15.9%;
+    --accent-foreground: 180.0 0.0% 98.0%;
+    --destructive: 358.7 100.0% 69.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 20%;
+    --input: 240 4% 24%;
+    --ring: 240.1 4.4% 46.3%;
+    --radius: 0.625rem;
+
+    /* 图表语义色：保留彩色以便区分数据系列（preset 原为灰阶） */
+    --chart-1: 220 90% 56%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    /* 侧栏语义色 */
+    --sidebar: 240.0 6.0% 10.0%;
+    --sidebar-foreground: 180.0 0.0% 98.0%;
+    --sidebar-primary: 216.3 100.0% 58.5%;
+    --sidebar-primary-foreground: 213.8 96.5% 96.8%;
+    --sidebar-accent: 240.0 4.0% 15.9%;
+    --sidebar-accent-foreground: 180.0 0.0% 98.0%;
+    --sidebar-border: 240 4% 20%;
+    --sidebar-ring: 240.1 4.4% 46.3%;
+
+    /* 扩展状态色（项目扩展，preset 未提供） */
+    --success: 142 69% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 32 95% 55%;
+    --warning-foreground: 240 10% 3.9%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+@layer components {
+  .sidebar-menu-label {
+    @apply mb-1 text-[10px] font-medium uppercase tracking-wider text-sidebar-foreground/60;
+  }
+  .sidebar-menu-button[data-active='true'] {
+    @apply font-medium;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
